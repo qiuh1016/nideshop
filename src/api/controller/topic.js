@@ -4,7 +4,7 @@ module.exports = class extends Base {
   async listAction() {
     const model = this.model('topic');
     const data = await model.field(['id', 'title', 'price_info', 'scene_pic_url', 'subtitle']).page(this.get('page') || 1, this.get('size') || 10).countSelect();
-
+    
     return this.success(data);
   }
 

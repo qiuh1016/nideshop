@@ -7,6 +7,7 @@ module.exports = class extends Base {
     const fullUserInfo = this.post('userInfo');
     const userInfo = fullUserInfo.userInfo;
     const clientIp = ''; // 暂时不记录 ip
+    think.logger.debug(code);
 
     // 获取openid
     const options = {
@@ -22,6 +23,7 @@ module.exports = class extends Base {
 
     let sessionData = await rp(options);
     sessionData = JSON.parse(sessionData);
+
     if (!sessionData.openid) {
       return this.fail('登录失败');
     }
