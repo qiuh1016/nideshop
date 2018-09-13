@@ -25,7 +25,7 @@ module.exports = class extends Base {
     const add_time = new Date()
 
     const image_path = think.ROOT_PATH + `/www/static/plan/${add_time.getTime()}.png`
-    const image_url = `http://${think.config('host')}:8360/static/plan/${add_time.getTime()}.png`
+    const image_url = `http://192.168.0.120:8360/static/plan/${add_time.getTime()}.png`
     const model = this.model('plan');
     const plan_id = await model.add({
       stylist_id, name, style, fit_group, fit_scene, desc, image_url
