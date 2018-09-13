@@ -7,7 +7,7 @@ CREATE TABLE `nideshop_plan` (
   `fit_group` text NOT NULL,
   `fit_scene` text NOT NULL,
   `desc` varchar(255) NOT NULL DEFAULT '',
-  `add_time` timestamp NOT NULL DEFAULT '0',
+  `add_time` timestamp NOT NULL,
   `enabled` tinyint(3) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
@@ -23,3 +23,15 @@ CREATE TABLE `nideshop_plan_item` (
   `enabled` tinyint(3) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `nideshop_stylist` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(10) NOT NULL,
+  `headimgurl` varchar(255) NOT NULL,
+  `style` varchar(255) NOT NULL,
+  `adoption_rate` int(11) NOT NULL DEFAULT '0',
+  `goodat` varchar(255) NOT NULL,
+  `experience` varchar(255) NOT NULL,
+  `desc` varchar(255) DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
