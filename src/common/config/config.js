@@ -2,6 +2,7 @@
 module.exports = {
   default_module: 'api',
   workers: 1,
+  host: '127.0.0.1',
   weixin: {
     appid: 'wxb2c22856549f3ab2', // 小程序 appid
     secret: 'e86319e7cf275af0f9f6e9458709cf7c', // 小程序密钥
