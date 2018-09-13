@@ -11,7 +11,8 @@ module.exports = {
     'brand',
     'search',
     'region',
-    'stylist'
+    'stylist',
+    'plan'
   ],
 
   // 可以公开访问的Action
