@@ -1,9 +1,9 @@
 CREATE TABLE `nideshop_plan` (
-  `id` mediumint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   `stylist_id` mediumint(5) unsigned NOT NULL,
   `name` varchar(60) NOT NULL DEFAULT '',
   `style` varchar(20) NOT NULL DEFAULT '',
-  `image_url` text NOT NULL,
+  `image_url` text NOT NULL DEFAULT '',
   `fit_group` text NOT NULL,
   `fit_scene` text NOT NULL,
   `desc` varchar(255) NOT NULL DEFAULT '',
@@ -18,9 +18,10 @@ CREATE TABLE `nideshop_plan_item` (
   `goods_id` mediumint(8) unsigned NOT NULL,
   `x` smallint(5) unsigned NOT NULL,
   `y` smallint(5) unsigned NOT NULL,
+  `z` smallint(5) unsigned NOT NULL,
   `w` smallint(5) unsigned NOT NULL,
   `h` smallint(5) unsigned NOT NULL,
-  `enabled` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `enabled` tinyint(3) unsigned NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
@@ -34,4 +35,19 @@ CREATE TABLE `nideshop_stylist` (
   `experience` varchar(255) NOT NULL,
   `desc` varchar(255) DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `nideshop_style_name` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(10) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+--  Records of `nideshop_style_name`
+-- ----------------------------
+BEGIN;
+INSERT INTO `nideshop_style_name` VALUES ('1', '简约'), ('2', '休闲'), ('3', '轻时尚');
+COMMIT;
+
+SET FOREIGN_KEY_CHECKS = 1;

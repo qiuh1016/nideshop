@@ -8,6 +8,60 @@ module.exports = class extends Base {
     return this.success(think.RESOURCE_PATH);
   }
 
+  async getAction() {
+    let id = this.get('id');
+    let data = await this.model('plan').getPlanAndItems(id);
+    this.success(data, 'ok');
+  }
+
+  async updateAction() {
+    const image = this.file('image');
+    const plan_id = this.post('id')
+    const name = this.post('name');
+    const style = this.post('style');
+    const fit_group = this.post('fit_group');
+    const fit_scene = this.post('fit_scene');
+    const desc = this.post('desc');
+    const goodsArr = JSON.parse(this.post('goodsArr'));
+
+    const add_time = new Date()
+
+    const image_path = think.ROOT_PATH + `/www/static/plan/${plan_id}.png`
+    const image_url = `http://192.168.0.120:8360/static/plan/${plan_id}.png`
+
+    await this.model('plan').where({ id: plan_id }).update({
+      name, style, fit_group, fit_scene, desc, image_url, add_time
+    });
+
+    await this.model('plan_item').where({ plan_id }).delete();
+
+    for (let i = 0; i < goodsArr.length; i++) {
+      const item_model = this.model('plan_item');
+      const goods = goodsArr[i];
+      if (goods.x < 0) goods.x = 0;
+      if (goods.y < 0) goods.y = 0;
+      if (goods.z < 0) goods.z = 0;
+      await item_model.add({
+        plan_id: plan_id,
+        goods_id: goods.goods_id,
+        x: goods.x,
+        y: goods.y,
+        z: goods.z,
+        w: goods.w,
+        h: goods.h,
+        enabled: goods.enabled
+      })
+    }
+
+    if (think.isEmpty(image)) {
+      return this.fail('保存失败');
+    }
+
+    let that = this;
+    fs.rename(image.path, image_path, function (res) {
+      return that.success();
+    });
+  }
   /**
    * 保存方案图片
    * @returns {Promise.<void>}
@@ -24,21 +78,26 @@ module.exports = class extends Base {
 
     const add_time = new Date()
 
-    const image_path = think.ROOT_PATH + `/www/static/plan/${add_time.getTime()}.png`
-    const image_url = `http://192.168.0.101:8360/static/plan/${add_time.getTime()}.png`
     const model = this.model('plan');
     const plan_id = await model.add({
-      stylist_id, name, style, fit_group, fit_scene, desc, image_url
+      stylist_id, name, style, fit_group, fit_scene, desc, add_time
     })
+    const image_path = think.ROOT_PATH + `/www/static/plan/${plan_id}.png`
+    const image_url = `http://192.168.0.120:8360/static/plan/${plan_id}.png`
+    await model.where({ id: plan_id }).update({ image_url });
 
     for (let i = 0; i < goodsArr.length; i++) {
       const item_model = this.model('plan_item');
       const goods = goodsArr[i];
+      if (goods.x < 0) goods.x = 0;
+      if (goods.y < 0) goods.y = 0;
+      if (goods.z < 0) goods.z = 0;
       await item_model.add({
         plan_id: plan_id,
-        goods_id: goods.id,
+        goods_id: goods.goods_id,
         x: goods.x,
         y: goods.y,
+        z: goods.z,
         w: goods.w,
         h: goods.h,
         enabled: goods.enabled
@@ -50,7 +109,7 @@ module.exports = class extends Base {
     }
 
     let that = this;
-    fs.rename(image.path, image_path, function(res) {
+    fs.rename(image.path, image_path, function (res) {
       return that.success();
     });
   }
@@ -61,7 +120,7 @@ module.exports = class extends Base {
   async listAction() {
     const stylist_id = this.get('stylist_id') || 1;
     const style = this.get('style') || '简约';
-    this.success(await this.model('plan').where({stylist_id, style}).select())
+    this.success(await this.model('plan').where({ stylist_id, style }).select())
   }
 
   /**
@@ -70,7 +129,7 @@ module.exports = class extends Base {
   async searchAction() {
     const stylist_id = this.get('stylist_id') || 1;
     const keyword = this.get('keyword');
-    const plans = await this.model('plan').where({ stylist_id: stylist_id, name : ['like', `%${keyword}%`] }).select();
+    const plans = await this.model('plan').where({ stylist_id: stylist_id, name: ['like', `%${keyword}%`] }).select();
     this.success(plans)
   }
 };
