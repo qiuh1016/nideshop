@@ -27,7 +27,7 @@ module.exports = class extends Base {
     const add_time = new Date()
 
     const image_path = think.ROOT_PATH + `/www/static/plan/${plan_id}.png`
-    const image_url = `http://192.168.0.120:8360/static/plan/${plan_id}.png`
+    const image_url = `${think.config('hostUrl')}/static/plan/${plan_id}.png`
 
     await this.model('plan').where({ id: plan_id }).update({
       name, style, fit_group, fit_scene, desc, image_url, add_time
@@ -83,7 +83,7 @@ module.exports = class extends Base {
       stylist_id, name, style, fit_group, fit_scene, desc, add_time
     })
     const image_path = think.ROOT_PATH + `/www/static/plan/${plan_id}.png`
-    const image_url = `http://192.168.0.120:8360/static/plan/${plan_id}.png`
+    const image_url = `${think.config('hostUrl')}/static/plan/${plan_id}.png`
     await model.where({ id: plan_id }).update({ image_url });
 
     for (let i = 0; i < goodsArr.length; i++) {
@@ -118,9 +118,14 @@ module.exports = class extends Base {
    * 根据搭配师和风格 显示方案
    */
   async listAction() {
+    let styles = ['简约', '休闲', '轻时尚'];
     const stylist_id = this.get('stylist_id') || 1;
-    const style = this.get('style') || '简约';
-    this.success(await this.model('plan').where({ stylist_id, style }).select())
+    const style_id = this.get('style_id') || -1;
+    let whereJson = { stylist_id }
+    if (style_id != -1) {
+      whereJson.style = styles[style_id]
+    }
+    this.success(await this.model('plan').where(whereJson).select())
   }
 
   /**
