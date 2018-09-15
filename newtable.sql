@@ -3,7 +3,7 @@ CREATE TABLE `nideshop_plan` (
   `stylist_id` mediumint(5) unsigned NOT NULL,
   `name` varchar(60) NOT NULL DEFAULT '',
   `style` varchar(20) NOT NULL DEFAULT '',
-  `image_url` text NOT NULL DEFAULT '',
+  `image_url` text,
   `fit_group` text NOT NULL,
   `fit_scene` text NOT NULL,
   `desc` varchar(255) NOT NULL DEFAULT '',
