@@ -24,19 +24,27 @@ module.exports = class extends Base {
     const fit_group = this.post('fit_group');
     const fit_scene = this.post('fit_scene');
     const desc = this.post('desc');
+    const v = parseInt(this.post('v')) + 1;
     const goodsArr = JSON.parse(this.post('goodsArr'));
 
     const add_time = new Date()
 
-    const image_path = think.ROOT_PATH + `/www/static/plan/${plan_id}.png`
-    const image_url = `${think.config('hostUrl')}/static/plan/${plan_id}.png`
-
+    if (think.isEmpty(image)) {
+      return this.fail('保存失败');
+    }
+    // 更新plan数据库
     await this.model('plan').where({ id: plan_id }).update({
-      name, style, fit_group, fit_scene, desc, image_url, add_time
+      name, style, fit_group, fit_scene, desc, add_time, v
     });
 
+    // 新图片上传七牛
+    let qiniu = this.service('qiniu', 'api');
+    await qiniu.upload(image.path, `${plan_id}.png`, true);
+
+    // 删除plan_item旧商品
     await this.model('plan_item').where({ plan_id }).delete();
 
+    // 添加新商品到plan_item
     for (let i = 0; i < goodsArr.length; i++) {
       const item_model = this.model('plan_item');
       const goods = goodsArr[i];
@@ -55,14 +63,7 @@ module.exports = class extends Base {
       })
     }
 
-    if (think.isEmpty(image)) {
-      return this.fail('保存失败');
-    }
-
-    let that = this;
-    fs.rename(image.path, image_path, function (res) {
-      return that.success();
-    });
+    return this.success();
   }
   /**
    * 保存方案图片
@@ -80,14 +81,21 @@ module.exports = class extends Base {
 
     const add_time = new Date()
 
+    if (think.isEmpty(image)) {
+      return this.fail('保存失败');
+    }
+
+    // 添加到plan数据库 获得id
     const model = this.model('plan');
     const plan_id = await model.add({
       stylist_id, name, style, fit_group, fit_scene, desc, add_time
     })
-    const image_path = think.ROOT_PATH + `/www/static/plan/${plan_id}.png`
-    const image_url = `${think.config('hostUrl')}/static/plan/${plan_id}.png`
-    await model.where({ id: plan_id }).update({ image_url });
 
+    // 上传图片到七牛 文件名为id.png
+    let qiniu = this.service('qiniu', 'api');
+    await qiniu.upload(image.path, `${plan_id}.png`);
+
+    // 添加商品到plan_item
     for (let i = 0; i < goodsArr.length; i++) {
       const item_model = this.model('plan_item');
       const goods = goodsArr[i];
@@ -106,14 +114,7 @@ module.exports = class extends Base {
       })
     }
 
-    if (think.isEmpty(image)) {
-      return this.fail('保存失败');
-    }
-
-    let that = this;
-    fs.rename(image.path, image_path, function (res) {
-      return that.success();
-    });
+    this.success();
   }
 
   /**

@@ -1,9 +1,10 @@
+DROP TABLE IF EXISTS `nideshop_plan`;
 CREATE TABLE `nideshop_plan` (
   `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   `stylist_id` mediumint(5) unsigned NOT NULL,
   `name` varchar(60) NOT NULL DEFAULT '',
   `style` varchar(20) NOT NULL DEFAULT '',
-  `image_url` text,
+  `v` smallint(5) unsigned NOT NULL DEFAULT 1,
   `fit_group` text NOT NULL,
   `fit_scene` text NOT NULL,
   `desc` varchar(255) NOT NULL DEFAULT '',
@@ -12,6 +13,7 @@ CREATE TABLE `nideshop_plan` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
+DROP TABLE IF EXISTS `nideshop_plan_item`;
 CREATE TABLE `nideshop_plan_item` (
   `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   `plan_id` mediumint(8) unsigned NOT NULL,
@@ -37,6 +39,7 @@ CREATE TABLE `nideshop_stylist` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
+DROP TABLE IF EXISTS `nideshop_style_name`;
 CREATE TABLE `nideshop_style_name` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(10) NOT NULL,
@@ -62,7 +65,7 @@ CREATE TABLE `nideshop_user` (
   `register_ip` varchar(45) NOT NULL DEFAULT '',
   `avatar` varchar(255) NOT NULL DEFAULT '',
   `weixin_openid` varchar(50) NOT NULL DEFAULT '',
-  `stylist_id` mediumint(8) unsigned NOT NULL DEFAULT '-1',
+  `stylist_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_name` (`username`)
 ) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
