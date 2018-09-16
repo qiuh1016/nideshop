@@ -2,6 +2,8 @@ const Base = require('./base.js');
 const fs = require('fs');
 const _ = require('lodash');
 
+let pageCount = 10;
+
 module.exports = class extends Base {
   async indexAction() {
     think.logger.debug(think.ROOT_PATH + '/www/');
@@ -121,14 +123,16 @@ module.exports = class extends Base {
    * 根据搭配师和风格 显示方案
    */
   async listAction() {
-    let styles = ['简约', '休闲', '轻时尚'];
+    const styles = ['简约', '休闲', '轻时尚'];
     const stylist_id = this.get('stylist_id') || 1;
     const style_id = this.get('style_id') || -1;
+    const page = this.get('page') || 0;
     let whereJson = { stylist_id }
     if (style_id != -1) {
       whereJson.style = styles[style_id]
     }
-    this.success(await this.model('plan').where(whereJson).select())
+    let data = await this.model('plan').where(whereJson).order(['id DESC']).page(page, pageCount).select();
+    this.success(data)
   }
 
   /**
@@ -137,23 +141,28 @@ module.exports = class extends Base {
   async searchAction() {
     const stylist_id = this.get('stylist_id') || 1;
     const keyword = this.get('keyword');
-    const plans = await this.model('plan').where({ stylist_id: stylist_id, name: ['like', `%${keyword}%`] }).select();
+    const page = this.get('page') || 0;
+    const plans = await this.model('plan')
+      .where({ stylist_id: stylist_id, name: ['like', `%${keyword}%`] })
+      .order(['id DESC']).page(page, pageCount).select();
     this.success(plans)
   }
 
   async deleteAction() {
     let id = this.get('planid');
     await this.model('plan').where({ id }).delete();
-    await this.model('plan_item').where({plan_id: id}).delete();
+    await this.model('plan_item').where({ plan_id: id }).delete();
     this.success()
   }
 
   async copyAction() {
     let id = this.get('planid');
     let plan = await this.model('plan').where({ id }).find();
-    let items = await this.model('plan_item').where({plan_id: id}).select();
+    let items = await this.model('plan_item').where({ plan_id: id }).select();
 
     delete plan.id;
+    plan.v = 0;
+    plan.name = `复制 ${plan.name}`
     let newId = await this.model('plan').add(plan);
     for (let i in items) {
       let item = items[i];
@@ -162,6 +171,8 @@ module.exports = class extends Base {
       await this.model('plan_item').add(item);
     }
 
-    this.success(newId);
+    let newplan = await this.model('plan').where({ id: newId }).find();
+
+    this.success(newplan);
   }
 };
