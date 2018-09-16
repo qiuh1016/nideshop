@@ -5,7 +5,9 @@ const _ = require('lodash');
 module.exports = class extends Base {
   async indexAction() {
     think.logger.debug(think.ROOT_PATH + '/www/');
-    return this.success(think.RESOURCE_PATH);
+    let arr = [0, 1, 2];
+    arr.splice(1, 1);
+    return this.success(arr);
   }
 
   async getAction() {
@@ -136,5 +138,29 @@ module.exports = class extends Base {
     const keyword = this.get('keyword');
     const plans = await this.model('plan').where({ stylist_id: stylist_id, name: ['like', `%${keyword}%`] }).select();
     this.success(plans)
+  }
+
+  async deleteAction() {
+    let id = this.get('planid');
+    await this.model('plan').where({ id }).delete();
+    await this.model('plan_item').where({plan_id: id}).delete();
+    this.success()
+  }
+
+  async copyAction() {
+    let id = this.get('planid');
+    let plan = await this.model('plan').where({ id }).find();
+    let items = await this.model('plan_item').where({plan_id: id}).select();
+
+    delete plan.id;
+    let newId = await this.model('plan').add(plan);
+    for (let i in items) {
+      let item = items[i];
+      delete item.id;
+      item.plan_id = newId;
+      await this.model('plan_item').add(item);
+    }
+
+    this.success(newId);
   }
 };

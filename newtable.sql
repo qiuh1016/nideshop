@@ -25,10 +25,10 @@ CREATE TABLE `nideshop_plan_item` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
+DROP TABLE IF EXISTS `nideshop_stylist`;
 CREATE TABLE `nideshop_stylist` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(10) NOT NULL,
-  `headimgurl` varchar(255) NOT NULL,
+  `user_id` mediumint(8) unsigned NOT NULL,
   `style` varchar(255) NOT NULL,
   `adoption_rate` int(11) NOT NULL DEFAULT '0',
   `goodat` varchar(255) NOT NULL,
@@ -42,6 +42,30 @@ CREATE TABLE `nideshop_style_name` (
   `name` varchar(10) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for nideshop_user
+-- ----------------------------
+DROP TABLE IF EXISTS `nideshop_user`;
+CREATE TABLE `nideshop_user` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(60) NOT NULL DEFAULT '',
+  `password` varchar(32) NOT NULL DEFAULT '',
+  `gender` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `birthday` int(11) unsigned NOT NULL DEFAULT '0',
+  `register_time` int(11) unsigned NOT NULL DEFAULT '0',
+  `last_login_time` int(11) unsigned NOT NULL DEFAULT '0',
+  `last_login_ip` varchar(15) NOT NULL DEFAULT '',
+  `user_level_id` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `nickname` varchar(60) NOT NULL,
+  `mobile` varchar(20) NOT NULL,
+  `register_ip` varchar(45) NOT NULL DEFAULT '',
+  `avatar` varchar(255) NOT NULL DEFAULT '',
+  `weixin_openid` varchar(50) NOT NULL DEFAULT '',
+  `stylist_id` mediumint(8) unsigned NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_name` (`username`)
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 --  Records of `nideshop_style_name`
