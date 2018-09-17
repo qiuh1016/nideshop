@@ -64,6 +64,7 @@ module.exports = class extends Base {
 
     return this.success();
   }
+  
   /**
    * 保存方案图片
    * @returns {Promise.<void>}
@@ -155,7 +156,7 @@ module.exports = class extends Base {
     let items = await this.model('plan_item').where({ plan_id: id }).select();
 
     delete plan.id;
-    plan.v = 0;
+    plan.v = 1;
     plan.name = `复制 ${plan.name}`
     let newId = await this.model('plan').add(plan);
     for (let i in items) {
