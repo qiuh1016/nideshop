@@ -50,9 +50,6 @@ module.exports = class extends Base {
     for (let i = 0; i < goodsArr.length; i++) {
       const item_model = this.model('plan_item');
       const goods = goodsArr[i];
-      if (goods.x < 0) goods.x = 0;
-      if (goods.y < 0) goods.y = 0;
-      if (goods.z < 0) goods.z = 0;
       await item_model.add({
         plan_id: plan_id,
         goods_id: goods.goods_id,
@@ -101,9 +98,6 @@ module.exports = class extends Base {
     for (let i = 0; i < goodsArr.length; i++) {
       const item_model = this.model('plan_item');
       const goods = goodsArr[i];
-      if (goods.x < 0) goods.x = 0;
-      if (goods.y < 0) goods.y = 0;
-      if (goods.z < 0) goods.z = 0;
       await item_model.add({
         plan_id: plan_id,
         goods_id: goods.goods_id,

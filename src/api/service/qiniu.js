@@ -14,9 +14,12 @@ module.exports = class extends think.Service {
      *  北美	qiniu.zone.Zone_na0
      */
 
-    var accessKey = 'qyvKYsZh5_zktu0Z1V72HFtwXg7U8n78Ms-iMDkX';
-    var secretKey = '44RfgfRCxg5kYuF9mzWBC02gN5JN2xuHRONv17F8';
-    let scopeName = 'youjianmishi';
+    // var accessKey = 'qyvKYsZh5_zktu0Z1V72HFtwXg7U8n78Ms-iMDkX';
+    // var secretKey = '44RfgfRCxg5kYuF9mzWBC02gN5JN2xuHRONv17F8';
+    // let scopeName = 'youjianmishi';
+    var accessKey = 'dKawexMpnY_7Zmek8aJ0RbtatIqTIMvyurd2xdXM';
+    var secretKey = 'X7n14IN13ThBDF2NhMbfwEvhZ0W0RZUqeyRQfSoX';
+    let scopeName = 'collocate';
     var mac = new qiniu.auth.digest.Mac(accessKey, secretKey);
 
     var options = {}
